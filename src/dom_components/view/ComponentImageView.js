@@ -15,6 +15,7 @@ export default ComponentView.extend({
     const model = this.model;
     ComponentView.prototype.initialize.apply(this, arguments);
     this.listenTo(model, 'change:src', this.updateSrc);
+    // this.listenTo(model, 'change:href', this.updateHref);
     this.classEmpty = `${this.ppfx}plh-image`;
     const config = this.config;
     config.modal && (this.modal = config.modal);
@@ -59,21 +60,52 @@ export default ComponentView.extend({
   },
 
   /**
+   * Update href attribute
+   * @private
+   * */
+  updateHref() {
+    debugger;
+    const { model, classEmpty, $el } = this;
+    const url = model.getHrefResult();
+    $el.parentElement.setAttribute('href', url);
+  },
+
+  /**
    * Open dialog for image changing
    * @param  {Object}  e  Event
    * @private
    * */
   onActive(ev) {
+    debugger;
     ev && ev.stopPropagation();
     var em = this.opts.config.em;
     var editor = em ? em.get('Editor') : '';
 
     if (editor && this.model.get('editable')) {
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = 'gjs-field';
+
+      const urlInput = document.createElement('input');
+      urlInput.id = 'redirect-link';
+      urlInput.placeholder = 'Link de redirecionamento';
+
+      urlInput.addEventListener('change', event => {
+        debugger;
+        this.model.set('href', event.currentTarget.value);
+      });
+
+      const hr = document.createElement('hr');
+
+      wrapperDiv.appendChild(urlInput);
+      wrapperDiv.appendChild(hr);
+
       editor.runCommand('open-assets', {
         target: this.model,
         types: ['image'],
         accept: 'image/*',
+        extraInfo: wrapperDiv,
         onSelect() {
+          debugger;
           editor.Modal.close();
           editor.AssetManager.setTarget(null);
         }

@@ -87,7 +87,7 @@ export default Backbone.View.extend({
    */
   getAddInput() {
     if (!this.inputUrl || !this.inputUrl.value)
-      this.inputUrl = this.el.querySelector(`.${this.pfx}add-asset input`);
+      this.inputUrl = this.el.querySelector(`.${this.pfx}add-field input`);
     return this.inputUrl;
   },
 

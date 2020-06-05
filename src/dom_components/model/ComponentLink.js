@@ -25,7 +25,13 @@ export default Component.extend(
       let result;
       let avoidEdit;
 
-      if (el.tagName == 'A') {
+      if (
+        el.tagName == 'A' &&
+        el.firstElementChild &&
+        el.firstElementChild.tagName === 'IMG'
+      ) {
+        return result;
+      } else if (el.tagName == 'A') {
         result = {
           type: 'link',
           editable: 0

@@ -7,6 +7,7 @@ export default {
     const title = opts.modalTitle || editor.t('assetManager.modalTitle') || '';
     const types = opts.types;
     const accept = opts.accept;
+    const extraInfo = opts.extraInfo;
 
     am.setTarget(opts.target);
     am.onClick(opts.onClick);
@@ -30,7 +31,14 @@ export default {
       );
       uploadEl && uploadEl.setAttribute('accept', accept);
     }
+    if (extraInfo) {
+      const addFieldDiv = amContainer.querySelector(
+        `div.${config.stylePrefix}add-field`
+      );
 
+      addFieldDiv.parentNode.insertBefore(extraInfo, addFieldDiv);
+    }
+    debugger;
     modal
       .open({
         title,

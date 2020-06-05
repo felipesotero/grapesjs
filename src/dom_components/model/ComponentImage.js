@@ -16,6 +16,7 @@ export default Component.extend(
       highlightable: 0,
       resizable: { ratioDefault: 1 },
       traits: ['alt'],
+      href: '',
 
       src: `<svg ${svgAttrs}>
         <path d="M8.5 13.5l2.5 3 3.5-4.5 4.5 6H5m16 1V5a2 2 0 0 0-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"></path>
@@ -29,6 +30,21 @@ export default Component.extend(
 
       // File to load asynchronously once the model is rendered
       file: ''
+    },
+
+    toHTML() {
+      debugger;
+      let code = Component.prototype.toHTML.apply(this, arguments);
+      let href = this.get('href');
+      if (href && !href.startsWith('http')) {
+        href = `http://${href}`;
+      }
+
+      if (href) {
+        return `<a href="${href}"> ${code} </a>`;
+      } else {
+        return code;
+      }
     },
 
     initialize(o, opt) {
@@ -91,6 +107,11 @@ export default Component.extend(
       return result;
     },
 
+    getHrefResult() {
+      const href = this.get('href') || '';
+      return href;
+    },
+
     isDefaultSrc() {
       return this.get('src') === result(this, 'defaults').src;
     },
@@ -132,8 +153,15 @@ export default Component.extend(
      * @private
      */
     isComponent(el) {
-      var result = '';
-      if (el.tagName == 'IMG') {
+      let result = '';
+      if (
+        el.tagName == 'A' &&
+        el.firstElementChild &&
+        el.firstElementChild.tagName == 'IMG'
+      ) {
+        debugger;
+        result = { type: 'image' };
+      } else if (el.tagName == 'IMG') {
         result = { type: 'image' };
       }
       return result;
